@@ -33,5 +33,48 @@ JSX: `<div style={{ backgroundColor: 'red', border: '2px solid red' }}></div>`
 ### Classes for Styling
 Use `className` instead of `class` to avoid collision with `class` keyword
 
+## Props
+
+### Custom Children
+
+```
+<Component>
+  <ChildComponent />
+</Component>
+```
+
+Display `ChildComponent` with `props.children`
+
 ## Components
 A class or function that produces HTML and handles feedback from the user
+
+### Class-Based Components
+
+```
+class App extends React.Component {
+  /* constructor is optional */
+  constructor(props) {
+    super(props);
+    this.state = { num: 0 };
+  }
+  
+  // initialize state without constructor
+  state = { num: 0 };
+  
+  render() {
+    return (
+      <div>{this.state.num}</div>
+    );
+  }
+}
+```
+
+Use `this.setState({ num: 9 })` to change state
+
+#### Lifecycle Methods:
+- `componentDidMount`
+  - good place to do data loading
+- `componentDidUpdate`
+  - make request when state is changed
+- `componentWillUnmount`
+  - cleanup
