@@ -35,6 +35,38 @@ Use `className` instead of `class` to avoid collision with `class` keyword
 
 ## Props
 
+### Passing Data From Child to Parent
+Making a function call in the parent component using values from the child component:
+
+Parent:
+
+```
+class App extends React.Component {
+  onSearchSubmit = term => {
+    // term is the value from the child
+  }
+  
+  render() {
+    return (
+      <SearchBar onSubmit={this.onSearchSubmit} />
+    );
+  }
+}
+```
+
+Child:
+
+```
+class SearchBar extends React.Component {
+  state = { term: '' };
+  
+  onFormSubmit = event => {
+    event.preventDefault();
+    this.props.onSubmit(this.state.term);
+  };
+}
+```
+
 ### Custom Children
 
 ```
@@ -104,7 +136,7 @@ class CustomComponent extends React.Component {
 ```
 class CustomComponent extends React.Component {
 
-  onFormSubmit(event) {
+  onFormSubmit = event => {
     event.preventDefault();
   }
   
@@ -113,6 +145,19 @@ class CustomComponent extends React.Component {
       <form onSubmit={this.onFormSubmit}>
       </form>
     );
+  }
+}
+```
+
+## Axios
+
+```
+class App extends React.Component {
+  onSearchSubmit = async term => {
+    const response = await axios.get(url, {
+      params: {},
+      headers: {}
+    });
   }
 }
 ```
