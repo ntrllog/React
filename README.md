@@ -78,3 +78,41 @@ Use `this.setState({ num: 9 })` to change state
   - make request when state is changed
 - `componentWillUnmount`
   - cleanup
+  
+## Event Handlers
+
+### Input
+
+```
+class CustomComponent extends React.Component {
+  state = { term: '' };
+  
+  render() {
+    return (
+      <input
+        type="text"
+        value={this.state.term}
+        onChange={e => this.setState({ term: e.target.value })}
+      />
+    );
+  }
+}
+```
+
+### Form Submission
+
+```
+class CustomComponent extends React.Component {
+
+  onFormSubmit(event) {
+    event.preventDefault();
+  }
+  
+  render() {
+    return (
+      <form onSubmit={this.onFormSubmit}>
+      </form>
+    );
+  }
+}
+```
