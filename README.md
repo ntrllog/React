@@ -80,6 +80,20 @@ Display `ChildComponent` with `props.children`
 ## Components
 A class or function that produces HTML and handles feedback from the user
 
+### Functional Components
+
+```
+import React, { useState} from 'react';
+
+const App = (props) => {
+  const [stateVar, setStateVar] = useState(defaultValue);
+  
+  return (
+    ...
+  );
+}
+```
+
 ### Class-Based Components
 
 ```
