@@ -94,6 +94,44 @@ const App = (props) => {
 }
 ```
 
+#### useEffect
+Similar to lifecycle methods for class-based components
+
+```
+useEffect(() => {
+  ...
+}, []);
+```
+
+- Run at initial render
+
+```
+useEffect(() => {
+  ...
+});
+```
+
+- Run at initial render and after every rerender
+
+```
+useEffect(() => {
+  ...
+}, [term]);
+```
+
+- Run at intial render and after every rerender if data has changed since last render
+
+Can return a function to perform cleanup, which runs after every rerender
+
+```
+useEffect(() => {
+  ...
+  return () => {
+    ...
+  };
+}
+```
+
 ### Class-Based Components
 
 ```
@@ -224,5 +262,70 @@ class App extends React.Component {
       headers: {}
     });
   }
+}
+```
+
+## Throttling API Requests
+Wait 1 second after typing in input to make API request
+
+```
+useEffect(() => {
+  const search = async () => {
+    const { data } = await axios.get(...);
+    ...
+  }
+  if (term && !results.length) {
+    search();
+  }
+  else {
+    const timerId = setTimeout(() => {
+      if (term) {
+        search();
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }
+}, [term]);
+```
+
+Note: this causes a warning about a missing dependency. Everytime we access a prop or state inside `useEffect`, we should reference it in the dependency array. However, referencing `results.length` in the dependency array causes two searches to be performed on initial render.
+
+Workaround: have 2 `useEffect` to monitor 2 different states: `term` and `debouncedTerm`. When the user types in input, the `term` changes. After 1 second, `debouncedTerm` is set to the value of `term` and the request is made using `debouncedTerm`.
+
+```
+const Search = () => {
+  const [term, setTerm] = useState('programming');
+  const [debouncedTerm, setDebouncedTerm] = useState(term);
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedTerm(term);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [term]);
+
+  useEffect(() => {
+    const search = async () => {
+      const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
+        params: {
+          action: 'query',
+          list: 'search',
+          origin: '*',
+          format: 'json',
+          srsearch: debouncedTerm,
+        },
+      });
+
+      setResults(data.query.search);
+    };
+    search();
+  }, [debouncedTerm]);
 }
 ```
