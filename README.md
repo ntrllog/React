@@ -202,7 +202,19 @@ class CustomComponent extends React.Component {
 ```
 
 ## Accessing the DOM
-Refs are a way to get a handle on elements rendered on the DOM
+Refs are a way to get a reference to elements rendered on the DOM
+
+```
+import React, { useRef } from 'react';
+
+const Dropdown = () => {
+  const ref = useRef();
+  
+  return (
+    <div ref={ref} class="ui form"></div>
+  );
+}
+```
 
 ```
 class CustomComponent extends React.Component {
@@ -329,3 +341,11 @@ const Search = () => {
   }, [debouncedTerm]);
 }
 ```
+
+## Event Bubbling
+When an event handler is triggered, the event that is created bubbles up through the parent elements
+1. The browser creates an Event object
+2. The Event object travels up to the next parent element
+3. If that element has an event handler, it is invoked with the Event object that was passed up
+
+Event handlers added by `document.addEventListener` are invoked first, then event handlers added by React, from innermost child to outermost parent
